@@ -1,4 +1,9 @@
+#!/usr/bin/env node
 import fs from 'fs';
+import { ReservedWords } from 'reservedWords';
+
+const val = 'let';
+if (val === ReservedWords.let) console.log('hello');
 
 const code = fs.readFileSync('./bin/example.js', 'utf-8');
 

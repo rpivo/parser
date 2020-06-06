@@ -1,4 +1,8 @@
+#!/usr/bin/env node
 import fs from 'fs';
+const val = 'let';
+if (val === "let" /* let */)
+    console.log('hello');
 const code = fs.readFileSync('./bin/example.js', 'utf-8');
 let it = 0;
 let letterSequence = [];
