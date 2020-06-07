@@ -2,13 +2,18 @@
 import fs from 'fs';
 import * as ReservedWords from './reservedWords.js';
 
-const val = 'let';
-if (val === ReservedWords.Variables.let) console.log('hello');
-
 const code = fs.readFileSync('./bin/example.js', 'utf-8');
+
+const checkReservedWord = (word: string) => {
+  for (let WordType in ReservedWords.WordTypes) {
+    if (ReservedWords[WordType][word]) return word;
+  }
+  return null;
+};
 
 let it = 0;
 let letterSequence = [];
+const body: object[] = [];
 
 while (it < code.length) {
   const char = code[it];
@@ -19,7 +24,12 @@ while (it < code.length) {
   if (isLetter) letterSequence.push(char);
   if (isWhitespace && letterSequence) {
     const word = letterSequence.join('');
-    console.log('word', word);
+    const reservedWord = checkReservedWord(word);
+    if (reservedWord) {
+      body.push({
+        type: 'VariableDeclaration',
+      });
+    }
     letterSequence = [];
   };
 
@@ -30,6 +40,8 @@ const ast = {
   'type': 'Program',
   'start': 0,
   'end': code.length,
-  'body': [],
+  'body': body,
   'sourceType': 'module',
 };
+
+console.log(ast);
