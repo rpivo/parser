@@ -1,4 +1,4 @@
-export const enum ReservedWords {
+export enum Variables {
   const = 'const',
   let = 'let',
   var = 'var',

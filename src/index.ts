@@ -1,9 +1,9 @@
 #!/usr/bin/env node
 import fs from 'fs';
-import { ReservedWords } from 'reservedWords';
+import * as ReservedWords from './reservedWords.js';
 
 const val = 'let';
-if (val === ReservedWords.let) console.log('hello');
+if (val === ReservedWords.Variables.let) console.log('hello');
 
 const code = fs.readFileSync('./bin/example.js', 'utf-8');
 
