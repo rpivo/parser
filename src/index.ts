@@ -38,20 +38,24 @@ while (it < code.length) {
   const char = code[it];
 
   const charType = checkCharType(char);
-  console.log({ charType });
 
   switch (charType) {
     case CharTypes.letter:
+      if (letterSequence.length === 0) letterSequence.push(it);
       letterSequence.push(char);
       break;
+
     case CharTypes.punctuation:
       break;
+
     case CharTypes.whitespace:
       if (letterSequence) {
+        const wordStart = letterSequence.shift();
         const reservedWord = checkReservedWord(letterSequence.join(''));
         if (reservedWord) {
           body.push({
             type: 'VariableDeclaration',
+            start: wordStart,
           });
         }
         letterSequence = [];
