@@ -30,50 +30,67 @@ const checkCharType = (char: string) => {
   return null;
 };
 
-const identifyLetterSequence = (seq: (string | number)[]) => {
-  console.log('hello');
-  //   const wordIndex = letterSequence.shift();
-  //   const [WordType, word] = checkReservedWord(letterSequence.join(''));
+let index = 0;
+let letterSequence: (string | number)[] = [];
 
-  //   if (WordType) {
+type TreeNode = {
+  type?: string;
+  start?: number;
+  end?: number;
+}
 
-  //   }
-  //   // if (reservedWord) {
-  //   //   body.push({
-  //   //     type: 'VariableDeclaration',
-  //   //     start: wordIndex,
-  //   //   });
-  //   // }
-  //   letterSequence = [];
+const body: TreeNode[] = [];
+
+const identifyPunctuation = (char: string, idx: number) => {
+  switch (char) {
+    case ';':
+      body[body.length - 1].end = idx + 1;
+  }
 };
 
-let it = 0;
-let letterSequence = [];
-const body: object[] = [];
+const identifyWord = () => {
+    const wordIndex = letterSequence.shift() as number;
+    const [wordType, word] = checkReservedWord(letterSequence.join(''));
 
-while (it < code.length) {
-  const char = code[it];
+    let type = '';
+
+    switch (wordType) {
+      case ReservedWords.WordTypes.ControlFlow:
+        break;
+      case ReservedWords.WordTypes.Variables:
+        type = 'VariableDeclaration';
+        break;
+    }
+
+    if (type) body.push({
+      type,
+      start: wordIndex,
+    });
+
+    letterSequence = [];
+};
+
+while (index < code.length) {
+  const char = code[index];
 
   const charType = checkCharType(char);
 
   switch (charType) {
     case CharTypes.letter:
-      if (letterSequence.length === 0) letterSequence.push(it);
+      if (!letterSequence.length) letterSequence.push(index);
       letterSequence.push(char);
       break;
 
     case CharTypes.punctuation:
+      identifyPunctuation(char, index);
       break;
 
     case CharTypes.whitespace:
-      if (letterSequence.length) {
-        identifyLetterSequence(letterSequence);
-        letterSequence = [];
-      }
+      if (letterSequence.length) identifyWord();
       break;
   }
 
-  it++;
+  index++;
 }
 
 const ast = {
