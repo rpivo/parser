@@ -4,6 +4,8 @@ export var ControlFlow;
     ControlFlow["case"] = "case";
     ControlFlow["continue"] = "continue";
     ControlFlow["default"] = "default";
+    ControlFlow["do"] = "do";
+    ControlFlow["else"] = "else";
 })(ControlFlow || (ControlFlow = {}));
 export var ErrorHandling;
 (function (ErrorHandling) {
@@ -23,3 +25,6 @@ export var WordTypes;
     WordTypes["ErrorHandling"] = "ErrorHandling";
     WordTypes["Variables"] = "Variables";
 })(WordTypes || (WordTypes = {}));
+// unsure where to put these:
+// delete
+// export

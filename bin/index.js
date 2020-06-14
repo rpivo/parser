@@ -6,9 +6,9 @@ const code = fs.readFileSync('./bin/example.js', 'utf-8');
 const checkReservedWord = (word) => {
     for (let WordType in ReservedWords.WordTypes) {
         if (ReservedWords[WordType][word])
-            return word;
+            return [WordType, word];
     }
-    return null;
+    return [null, word];
 };
 const checkCharType = (char) => {
     const regs = {
@@ -21,6 +21,20 @@ const checkCharType = (char) => {
             return key;
     }
     return null;
+};
+const identifyLetterSequence = (seq) => {
+    console.log('hello');
+    //   const wordIndex = letterSequence.shift();
+    //   const [WordType, word] = checkReservedWord(letterSequence.join(''));
+    //   if (WordType) {
+    //   }
+    //   // if (reservedWord) {
+    //   //   body.push({
+    //   //     type: 'VariableDeclaration',
+    //   //     start: wordIndex,
+    //   //   });
+    //   // }
+    //   letterSequence = [];
 };
 let it = 0;
 let letterSequence = [];
@@ -37,15 +51,8 @@ while (it < code.length) {
         case CharTypes.punctuation:
             break;
         case CharTypes.whitespace:
-            if (letterSequence) {
-                const wordStart = letterSequence.shift();
-                const reservedWord = checkReservedWord(letterSequence.join(''));
-                if (reservedWord) {
-                    body.push({
-                        type: 'VariableDeclaration',
-                        start: wordStart,
-                    });
-                }
+            if (letterSequence.length) {
+                identifyLetterSequence(letterSequence);
                 letterSequence = [];
             }
             break;

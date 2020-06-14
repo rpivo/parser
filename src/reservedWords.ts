@@ -3,6 +3,8 @@ export enum ControlFlow {
   case = 'case',
   continue = 'continue',
   default = 'default',
+  do = 'do',
+  else = 'else',
 }
 
 export enum ErrorHandling {
@@ -22,3 +24,7 @@ export enum WordTypes {
   ErrorHandling = 'ErrorHandling',
   Variables = 'Variables',
 }
+
+// unsure where to put these:
+// delete
+// export
