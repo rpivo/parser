@@ -37,6 +37,7 @@ type TreeNode = {
   type?: string;
   start?: number;
   end?: number;
+  declarations?: [];
 }
 
 const body: TreeNode[] = [];
@@ -65,6 +66,7 @@ const identifyWord = () => {
     if (type) body.push({
       type,
       start: wordIndex,
+      declarations: [],
     });
 
     letterSequence = [];

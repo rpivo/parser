@@ -46,6 +46,7 @@ const identifyWord = () => {
         body.push({
             type,
             start: wordIndex,
+            declarations: [],
         });
     letterSequence = [];
 };
