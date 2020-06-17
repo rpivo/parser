@@ -47,6 +47,7 @@ const identifyWord = () => {
             type,
             start: wordIndex,
             declarations: [],
+            kind: '',
         });
     letterSequence = [];
 };

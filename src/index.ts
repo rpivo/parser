@@ -34,10 +34,11 @@ let index = 0;
 let letterSequence: (string | number)[] = [];
 
 type TreeNode = {
-  type?: string;
-  start?: number;
-  end?: number;
   declarations?: [];
+  end?: number;
+  kind?: string;
+  start?: number;
+  type?: string;
 }
 
 const body: TreeNode[] = [];
@@ -67,6 +68,7 @@ const identifyWord = () => {
       type,
       start: wordIndex,
       declarations: [],
+      kind: '',
     });
 
     letterSequence = [];
