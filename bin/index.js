@@ -44,10 +44,10 @@ const identifyWord = () => {
     }
     if (type)
         body.push({
-            type,
-            start: wordIndex,
             declarations: [],
-            kind: '',
+            kind: word,
+            start: wordIndex,
+            type,
         });
     letterSequence = [];
 };

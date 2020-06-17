@@ -1,2 +1,2 @@
 const str = 'hello';
-const bool = true;
+let bool = true;
