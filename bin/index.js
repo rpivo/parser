@@ -2,6 +2,9 @@
 import fs from 'fs';
 import * as ReservedWords from './reservedWords.js';
 import { CharTypes } from './charTypes.js';
+const body = [];
+let index = 0;
+let letterSequence = [];
 const code = fs.readFileSync('./bin/example.js', 'utf-8');
 const checkReservedWord = (word) => {
     for (let WordType in ReservedWords.WordTypes) {
@@ -22,9 +25,6 @@ const checkCharType = (char) => {
     }
     return null;
 };
-let index = 0;
-let letterSequence = [];
-const body = [];
 const identifyPunctuation = (char, idx) => {
     switch (char) {
         case ';':
@@ -51,30 +51,33 @@ const identifyWord = () => {
         });
     letterSequence = [];
 };
-while (index < code.length) {
-    const char = code[index];
-    const charType = checkCharType(char);
-    switch (charType) {
-        case CharTypes.letter:
-            if (!letterSequence.length)
-                letterSequence.push(index);
-            letterSequence.push(char);
-            break;
-        case CharTypes.punctuation:
-            identifyPunctuation(char, index);
-            break;
-        case CharTypes.whitespace:
-            if (letterSequence.length)
-                identifyWord();
-            break;
+const createTree = () => {
+    while (index < code.length) {
+        const char = code[index];
+        const charType = checkCharType(char);
+        switch (charType) {
+            case CharTypes.letter:
+                if (!letterSequence.length)
+                    letterSequence.push(index);
+                letterSequence.push(char);
+                break;
+            case CharTypes.punctuation:
+                identifyPunctuation(char, index);
+                break;
+            case CharTypes.whitespace:
+                if (letterSequence.length)
+                    identifyWord();
+                break;
+        }
+        index++;
     }
-    index++;
-}
-const ast = {
-    'type': 'Program',
-    'start': 0,
-    'end': code.length,
-    'body': body,
-    'sourceType': 'module',
+    const ast = {
+        'type': 'Program',
+        'start': 0,
+        'end': code.length,
+        'body': body,
+        'sourceType': 'module',
+    };
+    console.log(ast);
 };
-console.log(ast);
+createTree();
