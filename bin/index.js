@@ -6,6 +6,7 @@ import { CharTypes } from './charTypes.js';
 const tree = [];
 // global store of variable declarations for the file
 const variableDeclarations = [];
+let isAwaitingVariableName = false;
 // array of character sequence that is currently being parsed. emptied out at the end of each word
 let letterSequence = [];
 const checkReservedWord = (word) => {
@@ -36,13 +37,19 @@ const identifyPunctuation = (char, idx) => {
 const identifyWord = () => {
     const wordIndex = letterSequence.shift();
     const [wordType, word] = checkReservedWord(letterSequence.join(''));
+    // TODO: see if we can skip the switch below if we've entered this loop.
+    if (isAwaitingVariableName) {
+        variableDeclarations[variableDeclarations.length - 1]['name'] = word;
+        isAwaitingVariableName = false;
+    }
     let type = '';
     switch (wordType) {
         case ReservedWords.WordTypes.ControlFlow:
             break;
         case ReservedWords.WordTypes.Variables:
             type = 'VariableDeclaration';
-            variableDeclarations.push([wordType, word]);
+            variableDeclarations.push({ type: word });
+            isAwaitingVariableName = true;
             break;
     }
     if (type)

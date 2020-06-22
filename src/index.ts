@@ -15,6 +15,7 @@ type TreeNode = {
 const tree: TreeNode[] = [];
 // global store of variable declarations for the file
 const variableDeclarations: object[] = [];
+let isAwaitingVariableName = false;
 // array of character sequence that is currently being parsed. emptied out at the end of each word
 let letterSequence: (string | number)[] = [];
 
@@ -53,15 +54,21 @@ const identifyPunctuation = (char: string, idx: number): void => {
 const identifyWord = (): void => {
     const wordIndex = letterSequence.shift() as number;
     const [wordType, word] = checkReservedWord(letterSequence.join(''));
+    
+    // TODO: see if we can skip the switch below if we've entered this loop.
+    if (isAwaitingVariableName) {
+      variableDeclarations[variableDeclarations.length - 1]['name'] = word;
+      isAwaitingVariableName = false;
+    }
 
     let type = '';
-
     switch (wordType) {
       case ReservedWords.WordTypes.ControlFlow:
         break;
       case ReservedWords.WordTypes.Variables:
         type = 'VariableDeclaration';
-        variableDeclarations.push([wordType, word]);
+        variableDeclarations.push({ type: word });
+        isAwaitingVariableName = true;
         break;
     }
 
