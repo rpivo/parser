@@ -2,10 +2,12 @@
 import fs from 'fs';
 import * as ReservedWords from './reservedWords.js';
 import { CharTypes } from './charTypes.js';
-const body = [];
-let index = 0;
+// body of abstract syntax tree
+const tree = [];
+// global store of variable declarations for the file
+const variableDeclarations = [];
+// array of character sequence that is currently being parsed. emptied out at the end of each word
 let letterSequence = [];
-const code = fs.readFileSync('./bin/example.js', 'utf-8');
 const checkReservedWord = (word) => {
     for (let WordType in ReservedWords.WordTypes) {
         if (ReservedWords[WordType][word])
@@ -28,7 +30,7 @@ const checkCharType = (char) => {
 const identifyPunctuation = (char, idx) => {
     switch (char) {
         case ';':
-            body[body.length - 1].end = idx + 1;
+            tree[tree.length - 1].end = idx + 1;
     }
 };
 const identifyWord = () => {
@@ -40,10 +42,11 @@ const identifyWord = () => {
             break;
         case ReservedWords.WordTypes.Variables:
             type = 'VariableDeclaration';
+            variableDeclarations.push([wordType, word]);
             break;
     }
     if (type)
-        body.push({
+        tree.push({
             declarations: [],
             kind: word,
             start: wordIndex,
@@ -52,6 +55,8 @@ const identifyWord = () => {
     letterSequence = [];
 };
 const createTree = () => {
+    const code = fs.readFileSync('./bin/example.js', 'utf-8');
+    let index = 0;
     while (index < code.length) {
         const char = code[index];
         const charType = checkCharType(char);
@@ -75,9 +80,10 @@ const createTree = () => {
         'type': 'Program',
         'start': 0,
         'end': code.length,
-        'body': body,
+        'body': tree,
         'sourceType': 'module',
     };
     console.log(ast);
+    console.log(variableDeclarations);
 };
 createTree();

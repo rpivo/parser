@@ -11,12 +11,12 @@ type TreeNode = {
   type?: string;
 }
 
-const body: TreeNode[] = [];
-
-let index = 0;
+// body of abstract syntax tree
+const tree: TreeNode[] = [];
+// global store of variable declarations for the file
+const variableDeclarations: object[] = [];
+// array of character sequence that is currently being parsed. emptied out at the end of each word
 let letterSequence: (string | number)[] = [];
-
-const code = fs.readFileSync('./bin/example.js', 'utf-8');
 
 const checkReservedWord = (word: string): [string | null, string] => {
   for (let WordType in ReservedWords.WordTypes) {
@@ -46,7 +46,7 @@ const checkCharType = (char: string): string | null => {
 const identifyPunctuation = (char: string, idx: number): void => {
   switch (char) {
     case ';':
-      body[body.length - 1].end = idx + 1;
+      tree[tree.length - 1].end = idx + 1;
   }
 };
 
@@ -61,10 +61,11 @@ const identifyWord = (): void => {
         break;
       case ReservedWords.WordTypes.Variables:
         type = 'VariableDeclaration';
+        variableDeclarations.push([wordType, word]);
         break;
     }
 
-    if (type) body.push({
+    if (type) tree.push({
       declarations: [],
       kind: word,
       start: wordIndex,
@@ -75,6 +76,9 @@ const identifyWord = (): void => {
 };
 
 const createTree = () => {
+  const code = fs.readFileSync('./bin/example.js', 'utf-8');
+  let index = 0;
+
   while (index < code.length) {
     const char = code[index];
   
@@ -102,11 +106,12 @@ const createTree = () => {
     'type': 'Program',
     'start': 0,
     'end': code.length,
-    'body': body,
+    'body': tree,
     'sourceType': 'module',
   };
   
-  console.log(ast); 
+  console.log(ast);
+  console.log(variableDeclarations);
 }
 
 createTree();
