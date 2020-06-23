@@ -122,8 +122,10 @@ const createTree = () => {
     'sourceType': 'module',
   };
   
-  console.log(JSON.stringify(ast));
-  console.log(variableDeclarations);
+  fs.writeFile('ast.json', JSON.stringify(ast), 'utf8', (err) => {
+    if (err) throw err;
+    console.log('The file has been saved!');
+  });
 }
 
 createTree();
