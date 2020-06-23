@@ -4,7 +4,9 @@ import * as ReservedWords from './reservedWords.js';
 import { CharTypes } from './charTypes.js';
 
 type TreeNode = {
-  declarations?: [];
+  declarations?: {
+    type: string;
+  }[];
   end?: number;
   kind?: string | null;
   start?: number;
@@ -58,6 +60,9 @@ const identifyWord = (): void => {
     // TODO: see if we can skip the switch below if we've entered this loop.
     if (isAwaitingVariableName) {
       variableDeclarations[variableDeclarations.length - 1]['name'] = word;
+      tree[tree.length - 1].declarations?.push({
+        type: 'VariableDeclarator',
+      });
       isAwaitingVariableName = false;
     }
 
@@ -117,7 +122,7 @@ const createTree = () => {
     'sourceType': 'module',
   };
   
-  console.log(ast);
+  console.log(JSON.stringify(ast));
   console.log(variableDeclarations);
 }
 

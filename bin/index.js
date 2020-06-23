@@ -40,6 +40,9 @@ const identifyWord = () => {
     // TODO: see if we can skip the switch below if we've entered this loop.
     if (isAwaitingVariableName) {
         variableDeclarations[variableDeclarations.length - 1]['name'] = word;
+        tree[tree.length - 1].declarations?.push({
+            type: 'VariableDeclarator',
+        });
         isAwaitingVariableName = false;
     }
     let type = '';
@@ -90,7 +93,7 @@ const createTree = () => {
         'body': tree,
         'sourceType': 'module',
     };
-    console.log(ast);
+    console.log(JSON.stringify(ast));
     console.log(variableDeclarations);
 };
 createTree();
