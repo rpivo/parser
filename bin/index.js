@@ -41,6 +41,8 @@ const identifyWord = () => {
     if (isAwaitingVariableName) {
         variableDeclarations[variableDeclarations.length - 1]['name'] = word;
         tree[tree.length - 1].declarations?.push({
+            end: wordIndex + word.length,
+            start: wordIndex,
             type: 'VariableDeclarator',
         });
         isAwaitingVariableName = false;
