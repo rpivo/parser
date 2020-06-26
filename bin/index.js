@@ -42,6 +42,12 @@ const identifyWord = () => {
         variableDeclarations[variableDeclarations.length - 1]['name'] = word;
         tree[tree.length - 1].declarations?.push({
             end: wordIndex + word.length,
+            id: {
+                end: wordIndex + word.length,
+                name: word,
+                start: wordIndex,
+                type: 'Identifier',
+            },
             start: wordIndex,
             type: 'VariableDeclarator',
         });
